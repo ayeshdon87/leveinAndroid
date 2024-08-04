@@ -2,6 +2,7 @@
     <string name="app_name">LeveinTest</string>
     <string name="add_author">Add Author</string>
     <string name="update_author">Update Author</string>
+    <string name="book_list">Book List</string>
     <string name="add_book">Add Book</string>
     <string name="latest_author">Authors</string>
     <string name="new_arrival">New Arrival</string>

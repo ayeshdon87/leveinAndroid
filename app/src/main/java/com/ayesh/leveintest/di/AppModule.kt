@@ -1,7 +1,15 @@
 package com.ayesh.leveintest.di
 
+import android.content.Context
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.room.Room
 import com.ayesh.leveintest.BuildConfig
+import com.ayesh.leveintest.data.local.BookEntity
+import com.ayesh.leveintest.data.local.LibraryDatabase
 import com.ayesh.leveintest.data.remote.APIClass
+import com.ayesh.leveintest.data.remote.BookRemoteMediator
 import com.ayesh.leveintest.data.repository.AuthorRepositoryImpl
 import com.ayesh.leveintest.data.repository.BookRepositoryImpl
 import com.ayesh.leveintest.domain.repository.AuthorRepository
@@ -15,6 +23,7 @@ import com.ayesh.leveintest.domain.usecase.book.GetBooksUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -49,7 +58,19 @@ object AppModule {
     @Provides
     @Singleton
     fun getBookRepository(apiClass: APIClass): BookRepository {
-        return BookRepositoryImpl(apiClass)
+        return BookRepositoryImpl(apiClass = apiClass)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLibaryDatabase(
+        @ApplicationContext context: Context,
+    ): LibraryDatabase {
+        return Room.databaseBuilder(
+            context,
+            LibraryDatabase::class.java,
+            "libary.db",
+        ).build()
     }
 
     @Provides
@@ -78,5 +99,25 @@ object AppModule {
     @Singleton
     fun bindValidateLastNameUseCase(): ValidateLastNameUseCase {
         return ValidateLastNameUseCase()
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    @Provides
+    @Singleton
+    fun provideBeerPager(
+        libraryDatabase: LibraryDatabase,
+        apiClass: APIClass,
+    ): Pager<Int, BookEntity> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            remoteMediator =
+                BookRemoteMediator(
+                    libraryDb = libraryDatabase,
+                    apiClass = apiClass,
+                ),
+            pagingSourceFactory = {
+                libraryDatabase.dao.pagingSource()
+            },
+        )
     }
 }
