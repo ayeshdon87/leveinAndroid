@@ -3,8 +3,11 @@ package com.ayesh.leveintest.di
 import com.ayesh.leveintest.BuildConfig
 import com.ayesh.leveintest.data.remote.APIClass
 import com.ayesh.leveintest.data.repository.AuthorRepositoryImpl
+import com.ayesh.leveintest.data.repository.BookRepositoryImpl
 import com.ayesh.leveintest.domain.repository.AuthorRepository
+import com.ayesh.leveintest.domain.repository.BookRepository
 import com.ayesh.leveintest.domain.usecase.author.GetAuthorsUseCase
+import com.ayesh.leveintest.domain.usecase.book.GetBooksUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +21,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object AppModule {
-
     @Provides
     @Singleton
     fun authAPI(): APIClass {
@@ -42,6 +44,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetAuthorUseCase(repository: AuthorRepository): GetAuthorsUseCase =
-        GetAuthorsUseCase(repository)
+    fun getBookRepository(apiClass: APIClass): BookRepository {
+        return BookRepositoryImpl(apiClass)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAuthorUseCase(repository: AuthorRepository): GetAuthorsUseCase = GetAuthorsUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetBooksUseCase(repository: BookRepository): GetBooksUseCase = GetBooksUseCase(repository)
 }

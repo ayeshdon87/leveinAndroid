@@ -10,21 +10,20 @@ import com.ayesh.leveintest.presantation.screens.bookDetailsScreen
 import com.ayesh.leveintest.presantation.screens.dashboardScreen
 import com.ayesh.leveintest.presantation.viewModel.DashboardViewModel
 
-
 @Composable
 fun appNavigation() {
-
     val naviController = rememberNavController()
     NavHost(
         navController = naviController,
-        startDestination = Screens.DashboardScreen
+        startDestination = Screens.DashboardScreen,
     ) {
         composable<Screens.DashboardScreen> {
             var viewModel: DashboardViewModel = hiltViewModel()
             dashboardScreen(
                 navController = naviController,
                 onEvent = viewModel::onEvent,
-                authorListState = viewModel.authors
+                authorListState = viewModel.authors,
+                bookListState = viewModel.books,
             )
         }
         composable<Screens.BookDetailsScreen> {

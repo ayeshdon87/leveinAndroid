@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,7 +35,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ayesh.leveintest.R
 import com.ayesh.leveintest.data.models.AuthorData
+import com.ayesh.leveintest.domain.models.BookItem
 import com.ayesh.leveintest.presantation.component.LoadingDialog
+import com.ayesh.leveintest.presantation.component.bookItemView
 import com.ayesh.leveintest.presantation.component.tagView
 import com.ayesh.leveintest.presantation.states.BaseState
 import com.ayesh.leveintest.presantation.ui.theme.authorButton
@@ -53,13 +56,17 @@ fun dashboardScreen(
     navController: NavController,
     onEvent: (DashboardEvent) -> Unit,
     authorListState: LiveData<BaseState<List<AuthorData>>>,
+    bookListState: LiveData<BaseState<List<BookItem>>>,
 ) {
     val authorState by authorListState.observeAsState()
+    val bookState by bookListState.observeAsState()
+
     LaunchedEffect(Unit) {
         onEvent(DashboardEvent.GetAuthors)
+        onEvent(DashboardEvent.GetBooks(1))
     }
 
-    LoadingDialog(isLoading = (authorState?.isLoading == true))
+    LoadingDialog(isLoading = (authorState?.isLoading == true || bookState?.isLoading == true))
 
     Scaffold(
         topBar = {
@@ -175,24 +182,38 @@ fun dashboardScreen(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+            ) {
+                Text(
+                    text = stringResource(id = R.string.new_arrival),
+                    color = darkText,
+                    style = typoLocal.bodyLarge,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = stringResource(id = R.string.view_all),
+                    color = lightGreyText,
+                    style = typoLocal.bodyUnderLine,
+                )
+            }
+            bookState?.data?.let {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2), // Specifies 2 items per row
+                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                ) {
+                    items(it.size) { book ->
+                        bookItemView(bookItm = it[book], onBookClick = {})
+                    }
+                }
+            }
         }
     }
-
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp)
-//    ) {
-//
-//
-// //        Text(
-// //            text = "Book",
-// //            modifier = Modifier.clickable
-// //            {
-// //                Log.d("TAG", "dashboardScreen: ")
-// //                navController?.navigate(Screens.BookDetailsScreen("1234"))
-// //            })
-//    }
 }
 
 @Preview(showBackground = true)
@@ -201,9 +222,12 @@ fun dashboardScreenPreview() {
     val mockNavController = rememberNavController()
     val _authors = MutableLiveData<BaseState<List<AuthorData>>>()
     val authors: LiveData<BaseState<List<AuthorData>>> = _authors
+    val _books = MutableLiveData<BaseState<List<BookItem>>>()
+    val books: LiveData<BaseState<List<BookItem>>> = _books
     dashboardScreen(
         navController = mockNavController,
         onEvent = {},
         authorListState = authors,
+        bookListState = books,
     )
 }
