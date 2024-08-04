@@ -1,5 +1,7 @@
 package com.ayesh.leveintest.domain.repository
 
-interface BookRepository {
+import com.ayesh.leveintest.data.models.BookResponse
 
+interface BookRepository {
+    suspend fun getBooList(page: Int): BookResponse
 }

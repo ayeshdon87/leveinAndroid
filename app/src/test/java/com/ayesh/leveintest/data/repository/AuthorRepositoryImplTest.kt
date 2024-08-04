@@ -27,9 +27,9 @@ class AuthorRepositoryImplTest {
         runBlocking {
             val mockAuthorList =
                 listOf(
-                    AuthorData(first_name = "Ayesh", last_name = "Nanayakkara"),
-                    AuthorData(first_name = "Sanath", last_name = "Jayasuriya"),
-                    AuthorData(first_name = "Kumar", last_name = "Sangakkara"),
+                    AuthorData(first_name = "Ayesh", last_name = "Nanayakkara", ID = "1234"),
+                    AuthorData(first_name = "Sanath", last_name = "Jayasuriya", ID = "12345"),
+                    AuthorData(first_name = "Kumar", last_name = "Sangakkara", ID = "123456"),
                 )
             `when`(apiClass.getAuthorList()).thenReturn(mockAuthorList)
 
