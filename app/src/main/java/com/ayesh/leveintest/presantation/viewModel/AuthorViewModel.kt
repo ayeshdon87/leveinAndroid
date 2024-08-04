@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ayesh.leveintest.data.models.AddAuthorModel
 import com.ayesh.leveintest.data.models.SuccessResponse
+import com.ayesh.leveintest.data.models.UpdateAuthorModel
 import com.ayesh.leveintest.domain.usecase.author.AddAuthorUseCase
+import com.ayesh.leveintest.domain.usecase.author.UpdateAuthorUseCase
 import com.ayesh.leveintest.domain.usecase.author.ValidateFirstNameUseCase
 import com.ayesh.leveintest.domain.usecase.author.ValidateLastNameUseCase
 import com.ayesh.leveintest.presantation.states.BaseState
@@ -28,10 +30,15 @@ class AuthorViewModel
         private var firstNameValidate: ValidateFirstNameUseCase,
         private var lastNameValidate: ValidateLastNameUseCase,
         private var addAuthorUseCase: AddAuthorUseCase,
+        private var updateAuthorUseCase: UpdateAuthorUseCase,
     ) : ViewModel() {
         var validationState by mutableStateOf(AuthorAddValidationState())
+        var updateValidationState by mutableStateOf(AuthorAddValidationState())
         private val _addAuthorState = MutableLiveData<BaseState<SuccessResponse>>()
         val addAuthorState: LiveData<BaseState<SuccessResponse>> = _addAuthorState
+
+        private val _updateAuthorState = MutableLiveData<BaseState<SuccessResponse>>()
+        val updateAuthorState: LiveData<BaseState<SuccessResponse>> = _updateAuthorState
 
         fun onEvent(events: AuthorAddScreenEvent) {
             when (events) {
@@ -45,13 +52,58 @@ class AuthorViewModel
                     validateLastName()
                 }
 
+                is AuthorAddScreenEvent.FirstNameChangedUpdate -> {
+                    updateValidationState = updateValidationState.copy(firstName = events.firstName)
+                }
+
+                is AuthorAddScreenEvent.LastNameChangedUpdate -> {
+                    updateValidationState = updateValidationState.copy(lastName = events.lastName)
+                }
+
                 is AuthorAddScreenEvent.Submit -> {
                     if (validateFirstName() && validateLastName()) {
                         val model = AddAuthorModel(validationState.firstName, validationState.lastName)
                         addAuthor(model)
                     }
                 }
+
+                is AuthorAddScreenEvent.Update -> {
+                    updateAuthor(
+                        UpdateAuthorModel(
+                            first_name = updateValidationState.firstName,
+                            last_name = updateValidationState.lastName,
+                            user_id = events.id,
+                        ),
+                    )
+                }
+
+                AuthorAddScreenEvent.GetAuthorDetails -> {
+                }
             }
+        }
+
+        private fun updateAuthor(model: UpdateAuthorModel) {
+            updateAuthorUseCase(model).onEach {
+                when (it) {
+                    is Resource.Loading -> {
+                        _updateAuthorState.value = BaseState(data = null, error = "", isLoading = true)
+                    }
+
+                    is Resource.Error -> {
+                        _updateAuthorState.value =
+                            BaseState(data = null, error = it.message, isLoading = false)
+                    }
+
+                    is Resource.Success -> {
+                        _updateAuthorState.value =
+                            BaseState(
+                                data = it.data,
+                                error = null,
+                                isLoading = false,
+                            )
+                    }
+                }
+            }.launchIn(viewModelScope)
         }
 
         private fun addAuthor(model: AddAuthorModel) {
@@ -62,7 +114,8 @@ class AuthorViewModel
                     }
 
                     is Resource.Error -> {
-                        _addAuthorState.value = BaseState(data = null, error = it.message, isLoading = false)
+                        _addAuthorState.value =
+                            BaseState(data = null, error = it.message, isLoading = false)
                     }
 
                     is Resource.Success -> {
@@ -96,9 +149,17 @@ class AuthorViewModel
 sealed interface AuthorAddScreenEvent {
     data object Submit : AuthorAddScreenEvent
 
+    data class Update(val id: String) : AuthorAddScreenEvent
+
+    data object GetAuthorDetails : AuthorAddScreenEvent
+
     data class FirstNameChanged(val firstName: String) : AuthorAddScreenEvent
 
+    data class FirstNameChangedUpdate(val firstName: String) : AuthorAddScreenEvent
+
     data class LastNameChanged(val lastName: String) : AuthorAddScreenEvent
+
+    data class LastNameChangedUpdate(val lastName: String) : AuthorAddScreenEvent
 }
 
 data class AuthorAddValidationState(

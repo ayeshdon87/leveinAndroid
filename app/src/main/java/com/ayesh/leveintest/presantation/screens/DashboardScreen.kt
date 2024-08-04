@@ -1,6 +1,5 @@
 package com.ayesh.leveintest.presantation.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -165,8 +164,7 @@ fun dashboardScreen(
                     style = typoLocal.bodyUnderLine,
                 )
             }
-            authorState?.data?.let {
-                Log.e("DDD", "SIZE : ${it.size}")
+            authorState?.data?.let { data ->
                 LazyHorizontalGrid(
                     rows = GridCells.Fixed(1),
                     modifier =
@@ -175,13 +173,21 @@ fun dashboardScreen(
                             .height(80.dp)
                             .padding(16.dp),
                 ) {
-                    items(it.size) { tag ->
+                    items(data.size) { tag ->
                         tagView(
                             tag =
-                                "${it[tag].first_name.orEmptyIfNull().capitalizeFirstLetter()} " +
-                                    "${it[tag].last_name.orEmptyIfNull().capitalizeFirstLetter()}",
+                                "${data[tag].first_name.orEmptyIfNull().capitalizeFirstLetter()} " +
+                                    "${
+                                        data[tag].last_name.orEmptyIfNull().capitalizeFirstLetter()
+                                    }",
                             onTagClick = {
-//                                navController?.navigate(Screens.BookDetailsScreen("1234"))
+                                navController?.navigate(
+                                    Screens.UpdateAuthorScreen(
+                                        firstName = data[tag].first_name,
+                                        lastName = data[tag].last_name,
+                                        id = data[tag].ID,
+                                    ),
+                                )
                             },
                         )
                     }
