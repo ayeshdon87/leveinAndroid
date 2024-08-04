@@ -6,8 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.ayesh.leveintest.presantation.screens.addAuthorScreen
 import com.ayesh.leveintest.presantation.screens.bookDetailsScreen
 import com.ayesh.leveintest.presantation.screens.dashboardScreen
+import com.ayesh.leveintest.presantation.viewModel.AuthorViewModel
 import com.ayesh.leveintest.presantation.viewModel.DashboardViewModel
 
 @Composable
@@ -29,6 +31,16 @@ fun appNavigation() {
         composable<Screens.BookDetailsScreen> {
             val arg = it.toRoute<Screens.BookDetailsScreen>()
             bookDetailsScreen(navController = naviController, arg.bookId)
+        }
+
+        composable<Screens.AuthorAddScreen> {
+            var viewModel: AuthorViewModel = hiltViewModel()
+            addAuthorScreen(
+                navController = naviController,
+                onEvent = viewModel::onEvent,
+                validationState = viewModel.validationState,
+                addStateObserver = viewModel.addAuthorState,
+            )
         }
     }
 }

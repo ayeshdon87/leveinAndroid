@@ -6,7 +6,10 @@ import com.ayesh.leveintest.data.repository.AuthorRepositoryImpl
 import com.ayesh.leveintest.data.repository.BookRepositoryImpl
 import com.ayesh.leveintest.domain.repository.AuthorRepository
 import com.ayesh.leveintest.domain.repository.BookRepository
+import com.ayesh.leveintest.domain.usecase.author.AddAuthorUseCase
 import com.ayesh.leveintest.domain.usecase.author.GetAuthorsUseCase
+import com.ayesh.leveintest.domain.usecase.author.ValidateFirstNameUseCase
+import com.ayesh.leveintest.domain.usecase.author.ValidateLastNameUseCase
 import com.ayesh.leveintest.domain.usecase.book.GetBooksUseCase
 import dagger.Module
 import dagger.Provides
@@ -55,4 +58,20 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGetBooksUseCase(repository: BookRepository): GetBooksUseCase = GetBooksUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideAddAuthorUseCase(repository: AuthorRepository): AddAuthorUseCase = AddAuthorUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun bindValidateFirstnameUseCase(): ValidateFirstNameUseCase {
+        return ValidateFirstNameUseCase()
+    }
+
+    @Provides
+    @Singleton
+    fun bindValidateLastNameUseCase(): ValidateLastNameUseCase {
+        return ValidateLastNameUseCase()
+    }
 }

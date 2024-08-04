@@ -6,4 +6,7 @@
     <string name="new_arrival">New Arrival</string>
     <string name="view_all">View All</string>
     <string name="dashboard_title">Library App</string>
+    <string name="author_name_invalid">Please enter valid name</string>
+    <string name="author_first_name">First Name</string>
+    <string name="author_last_name">Last Name</string>
 </resources>

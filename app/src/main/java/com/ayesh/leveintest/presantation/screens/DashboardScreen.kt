@@ -2,6 +2,7 @@ package com.ayesh.leveintest.presantation.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +40,7 @@ import com.ayesh.leveintest.domain.models.BookItem
 import com.ayesh.leveintest.presantation.component.LoadingDialog
 import com.ayesh.leveintest.presantation.component.bookItemView
 import com.ayesh.leveintest.presantation.component.tagView
+import com.ayesh.leveintest.presantation.navigation.Screens
 import com.ayesh.leveintest.presantation.states.BaseState
 import com.ayesh.leveintest.presantation.ui.theme.authorButton
 import com.ayesh.leveintest.presantation.ui.theme.bg
@@ -90,6 +92,9 @@ fun dashboardScreen(
                     modifier =
                         Modifier
                             .weight(1f)
+                            .clickable {
+                                navController?.navigate(Screens.AuthorAddScreen)
+                            }
                             .height(100.dp),
                     colors = CardDefaults.cardColors(containerColor = authorButton),
                     elevation =

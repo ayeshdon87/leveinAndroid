@@ -1,6 +1,8 @@
 package com.ayesh.leveintest.data.repository
 
+import com.ayesh.leveintest.data.models.AddAuthorModel
 import com.ayesh.leveintest.data.models.AuthorData
+import com.ayesh.leveintest.data.models.SuccessResponse
 import com.ayesh.leveintest.data.remote.APIClass
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -37,5 +39,19 @@ class AuthorRepositoryImplTest {
 
             Assert.assertEquals(mockAuthorList, result)
             verify(apiClass, times(1)).getAuthorList()
+        }
+
+    @Test
+    fun `author add returns expected data`(): Unit =
+        runBlocking {
+            var mockSuccessResponse = SuccessResponse(success = true, message = "Success")
+            var request = AddAuthorModel(first_name = "Ayesh", last_name = "Nanayakkara")
+
+            `when`(apiClass.addAuthor(request)).thenReturn(mockSuccessResponse)
+
+            val result = authorRepository.addAuthor(request)
+
+            Assert.assertEquals(mockSuccessResponse, result)
+            verify(apiClass, times(1)).addAuthor(request)
         }
 }
