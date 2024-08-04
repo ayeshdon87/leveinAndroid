@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.ayesh.leveintest.presantation.screens.addAuthorScreen
 import com.ayesh.leveintest.presantation.screens.bookDetailsScreen
 import com.ayesh.leveintest.presantation.screens.dashboardScreen
+import com.ayesh.leveintest.presantation.screens.updateAuthorScreen
 import com.ayesh.leveintest.presantation.viewModel.AuthorViewModel
 import com.ayesh.leveintest.presantation.viewModel.DashboardViewModel
 
@@ -40,6 +41,20 @@ fun appNavigation() {
                 onEvent = viewModel::onEvent,
                 validationState = viewModel.validationState,
                 addStateObserver = viewModel.addAuthorState,
+            )
+        }
+        composable<Screens.UpdateAuthorScreen> {
+            val arg = it.toRoute<Screens.UpdateAuthorScreen>()
+            var viewModel: AuthorViewModel = hiltViewModel()
+            updateAuthorScreen(
+                navController = naviController,
+                onEvent = viewModel::onEvent,
+                validationState =
+                    viewModel.updateValidationState,
+                updateStateObserver = viewModel.updateAuthorState,
+                firstName = arg.firstName,
+                lastName = arg.lastName,
+                id = arg.id,
             )
         }
     }

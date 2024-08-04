@@ -8,6 +8,7 @@ import com.ayesh.leveintest.domain.repository.AuthorRepository
 import com.ayesh.leveintest.domain.repository.BookRepository
 import com.ayesh.leveintest.domain.usecase.author.AddAuthorUseCase
 import com.ayesh.leveintest.domain.usecase.author.GetAuthorsUseCase
+import com.ayesh.leveintest.domain.usecase.author.UpdateAuthorUseCase
 import com.ayesh.leveintest.domain.usecase.author.ValidateFirstNameUseCase
 import com.ayesh.leveintest.domain.usecase.author.ValidateLastNameUseCase
 import com.ayesh.leveintest.domain.usecase.book.GetBooksUseCase
@@ -62,6 +63,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAddAuthorUseCase(repository: AuthorRepository): AddAuthorUseCase = AddAuthorUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateAuthorUseCase(repository: AuthorRepository): UpdateAuthorUseCase = UpdateAuthorUseCase(repository)
 
     @Provides
     @Singleton

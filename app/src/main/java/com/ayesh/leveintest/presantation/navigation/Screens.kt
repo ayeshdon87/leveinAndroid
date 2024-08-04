@@ -19,5 +19,9 @@ sealed class Screens {
     data class BookDetailsScreen(val bookId: String) : Screens()
 
     @Serializable
+    data class UpdateAuthorScreen(val firstName: String, val lastName: String, val id: String) :
+        Screens()
+
+    @Serializable
     data object AuthorAddScreen : Screens()
 }
