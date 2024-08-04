@@ -93,6 +93,13 @@ dependencies {
     implementation(libs.ktx.livedata)
     implementation(libs.hilt.navigation)
 
+    implementation(libs.pagging.compose)
+    implementation(libs.pagging.runtime)
+
+    implementation(libs.room.kts)
+    implementation(libs.room.paging)
+    kapt(libs.room.compiler)
+
     implementation(libs.hilt.android)
     implementation(libs.androidx.runtime.livedata)
     kapt(libs.hilt.compiler)

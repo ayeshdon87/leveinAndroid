@@ -24,6 +24,9 @@ mockito = "4.11.0"
 mockitoKtx = "4.1.0"
 mockk = "1.12.0"
 coroutineTest = "1.7.1"
+paggingCompose = "3.3.1"
+paggingRuntime = "3.1.1"
+room = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,7 +60,11 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 livedata-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "livedataTest" }
 coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTest" }
-
+pagging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paggingCompose" }
+pagging-runtime = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paggingRuntime" }
+room-kts = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

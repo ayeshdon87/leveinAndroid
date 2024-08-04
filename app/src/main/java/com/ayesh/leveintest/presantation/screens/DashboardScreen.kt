@@ -157,12 +157,6 @@ fun dashboardScreen(
                     color = darkText,
                     style = typoLocal.bodyLarge,
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(id = R.string.view_all),
-                    color = lightGreyText,
-                    style = typoLocal.bodyUnderLine,
-                )
             }
             authorState?.data?.let { data ->
                 LazyHorizontalGrid(
@@ -211,6 +205,10 @@ fun dashboardScreen(
                     text = stringResource(id = R.string.view_all),
                     color = lightGreyText,
                     style = typoLocal.bodyUnderLine,
+                    modifier =
+                        Modifier.clickable {
+                            navController?.navigate(Screens.BookListScreen)
+                        },
                 )
             }
             bookState?.data?.let {

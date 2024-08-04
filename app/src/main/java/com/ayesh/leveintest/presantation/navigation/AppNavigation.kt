@@ -6,11 +6,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ayesh.leveintest.presantation.screens.addAuthorScreen
 import com.ayesh.leveintest.presantation.screens.bookDetailsScreen
+import com.ayesh.leveintest.presantation.screens.bookListScreen
 import com.ayesh.leveintest.presantation.screens.dashboardScreen
 import com.ayesh.leveintest.presantation.screens.updateAuthorScreen
 import com.ayesh.leveintest.presantation.viewModel.AuthorViewModel
+import com.ayesh.leveintest.presantation.viewModel.BookViewModel
 import com.ayesh.leveintest.presantation.viewModel.DashboardViewModel
 
 @Composable
@@ -55,6 +58,17 @@ fun appNavigation() {
                 firstName = arg.firstName,
                 lastName = arg.lastName,
                 id = arg.id,
+            )
+        }
+
+        composable<Screens.BookListScreen> {
+            var viewModel: BookViewModel = hiltViewModel()
+            val book = viewModel.bookPagingFlow.collectAsLazyPagingItems()
+            // beers: LazyPagingItems<Beer>
+            bookListScreen(
+                navController = naviController,
+                onEvent = viewModel::onEvent,
+                bookListState = book,
             )
         }
     }

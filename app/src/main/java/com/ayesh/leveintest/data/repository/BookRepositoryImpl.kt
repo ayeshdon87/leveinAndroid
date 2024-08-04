@@ -7,8 +7,19 @@ import javax.inject.Inject
 
 class BookRepositoryImpl
     @Inject
-    constructor(private var apiClass: APIClass) : BookRepository {
+    constructor(
+        private var apiClass: APIClass,
+    ) : BookRepository {
         override suspend fun getBooList(page: Int): BookResponse {
             return apiClass.getBookList(page)
         }
+
+//        @OptIn(ExperimentalPagingApi::class)
+//        override suspend fun getBookListWithPagination(page: Int): PagingData<BookEntity> {
+//            return Pager(
+//                config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+//                remoteMediator = bookRemoteMediator,
+//                pagingSourceFactory = { dao.pagingSource() },
+//            )
+//        }
     }
